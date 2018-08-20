@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Website.Services;
 using Website.Models;
+using Microsoft.AspNetCore.Authorization;
+using Website.Extensions;
 
 namespace Website
 {
@@ -49,6 +51,7 @@ namespace Website
                 options.Password.RequireUppercase = false;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
+                
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -59,6 +62,9 @@ namespace Website
             // Add application services.
             services.AddTransient<Services.IEmailSender, EmailSender>();
 
+            services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+        
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
